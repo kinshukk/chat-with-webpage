@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "Chat with Webpage",
+  "version": "0.1.0",
+  "description": "Chat with LLMs using webpage context via OpenRouter",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "contextMenus",
+    "scripting"
+  ],
+  "action": {
+    "default_popup": "popup/popup.html"
+  },
+  "background": {
+    "service_worker": "background/service-worker.js",
+    "type": "module"
+  },
+  "content_scripts": [{
+    "matches": ["<all_urls>"],
+    "js": [
+      "content-scripts/dom-parser.js",
+      "content-scripts/content.js"
+    ]
+  }]
+}

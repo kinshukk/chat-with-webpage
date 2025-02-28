@@ -1,0 +1,16 @@
+{
+  "name": "chat-with-webpage",
+  "version": "0.1.0",
+  "description": "Chrome extension for contextual LLM chat using OpenRouter",
+  "private": true,
+  "scripts": {
+    "build": "mkdir -p dist && cp -r manifest.json popup background content-scripts modules dist/",
+    "watch": "nodemon --watch src -e js,html,css --exec npm run build"
+  },
+  "dependencies": {
+    "@mozilla/readability": "^0.5.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}

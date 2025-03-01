@@ -83,29 +83,18 @@ document.addEventListener('DOMContentLoaded', async () => {
       console.log('Found page context:', result.pageContext);
       currentContext = result.pageContext;
       
-      // Create a context display element if there's context to show
+      // Display the selected text in the dedicated container
       if (currentContext.selectedText) {
-        const contextDisplay = document.createElement('div');
-        contextDisplay.className = 'context-display';
-        
-        // Create and style the context content
-        const contextContent = document.createElement('div');
-        contextContent.className = 'context-content';
+        const selectedTextContainer = document.getElementById('selected-text-container');
         
         // Add formatted context if available, otherwise just the selection
         if (currentContext.formattedContext) {
-          contextContent.innerHTML = currentContext.formattedContext
+          selectedTextContainer.innerHTML = currentContext.formattedContext
             .replace(new RegExp(`"${currentContext.selectedText}"`, 'g'), 
                      `"<mark>${currentContext.selectedText}</mark>"`);
         } else {
-          contextContent.innerHTML = `Selected text: "<mark>${currentContext.selectedText}</mark>"`;
+          selectedTextContainer.innerHTML = `"<mark>${currentContext.selectedText}</mark>"`;
         }
-        
-        contextDisplay.appendChild(contextContent);
-        
-        // Insert at the top of the chat container
-        const chatContainer = document.querySelector('.chat-container');
-        chatContainer.insertBefore(contextDisplay, chatContainer.firstChild);
         
         // Pre-fill the input field with a prompt
         userInput.value = `About this text: "${currentContext.selectedText.substring(0, 30)}${currentContext.selectedText.length > 30 ? '...' : ''}"\n\n`;
@@ -127,23 +116,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
         
         // Display minimal context
-        const contextDisplay = document.createElement('div');
-        contextDisplay.className = 'context-display';
-        
-        const contextContent = document.createElement('div');
-        contextContent.className = 'context-content';
-        contextContent.innerHTML = `Selected text: "<mark>${result.currentSelection.text}</mark>"`;
-        
-        contextDisplay.appendChild(contextContent);
-        
-        const chatContainer = document.querySelector('.chat-container');
-        chatContainer.insertBefore(contextDisplay, chatContainer.firstChild);
+        const selectedTextContainer = document.getElementById('selected-text-container');
+        selectedTextContainer.innerHTML = `"<mark>${result.currentSelection.text}</mark>"`;
         
         // Pre-fill the input field
         userInput.value = `About this text: "${result.currentSelection.text.substring(0, 30)}${result.currentSelection.text.length > 30 ? '...' : ''}"\n\n`;
         userInput.focus();
       } else {
         console.warn('No selection data found either');
+        document.getElementById('selected-text-container').innerHTML = 'No text selected';
       }
     }
   } catch (error) {
@@ -212,31 +193,30 @@ sendMessageBtn.addEventListener('click', async () => {
 
 // Update conversation tree
 function updateConversationTree({ question, answer, context }) {
-  const thread = document.createElement('div');
-  thread.className = 'conversation-thread';
-
-  // Add context if available
-  if (context) {
-    const contextElement = document.createElement('div');
-    contextElement.className = 'context';
-    contextElement.textContent = `Selection: "${context.selectedText}"`;
-    thread.appendChild(contextElement);
-  }
-
-  // Add question
-  const questionElement = document.createElement('div');
-  questionElement.className = 'message question';
-  questionElement.textContent = question;
-  thread.appendChild(questionElement);
-
-  // Add answer
-  const answerElement = document.createElement('div');
-  answerElement.className = 'message answer';
-  answerElement.textContent = answer;
-  thread.appendChild(answerElement);
-
-  conversationTree.appendChild(thread);
-  conversationTree.scrollTop = conversationTree.scrollHeight;
+  const conversationContainer = document.getElementById('conversation-tree');
+  
+  // Add user message bubble
+  const userMessage = document.createElement('div');
+  userMessage.className = 'message user';
+  userMessage.textContent = question;
+  conversationContainer.appendChild(userMessage);
+  
+  // Add assistant message bubble
+  const assistantMessage = document.createElement('div');
+  assistantMessage.className = 'message assistant';
+  assistantMessage.textContent = answer;
+  conversationContainer.appendChild(assistantMessage);
+  
+  // Store the message data for potential future use
+  const messageData = JSON.stringify([
+    { role: 'user', content: question },
+    { role: 'assistant', content: answer }
+  ]);
+  
+  userMessage.dataset.messageData = messageData;
+  
+  // Scroll to the bottom of the conversation
+  conversationContainer.scrollTop = conversationContainer.scrollHeight;
 }
 
 // Listen for messages from content script
@@ -245,27 +225,15 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     currentContext = message;
     
     // Update UI with the context if the popup is already open
-    const existingContextDisplay = document.querySelector('.context-display');
-    if (!existingContextDisplay) {
-      const contextDisplay = document.createElement('div');
-      contextDisplay.className = 'context-display';
-      
-      const contextContent = document.createElement('div');
-      contextContent.className = 'context-content';
-      
-      // Add formatted context if available
-      if (message.formattedContext) {
-        contextContent.innerHTML = message.formattedContext
-          .replace(new RegExp(`"${message.selectedText}"`, 'g'), 
-                   `"<mark>${message.selectedText}</mark>"`);
-      } else {
-        contextContent.innerHTML = `Selected text: "<mark>${message.selectedText}</mark>"`;
-      }
-      
-      contextDisplay.appendChild(contextContent);
-      
-      const chatContainer = document.querySelector('.chat-container');
-      chatContainer.insertBefore(contextDisplay, chatContainer.firstChild);
+    const selectedTextContainer = document.getElementById('selected-text-container');
+    
+    // Add formatted context if available
+    if (message.formattedContext) {
+      selectedTextContainer.innerHTML = message.formattedContext
+        .replace(new RegExp(`"${message.selectedText}"`, 'g'), 
+                 `"<mark>${message.selectedText}</mark>"`);
+    } else {
+      selectedTextContainer.innerHTML = `"<mark>${message.selectedText}</mark>"`;
     }
     
     userInput.value = `About this text: "${message.selectedText.substring(0, 30)}${message.selectedText.length > 30 ? '...' : ''}"\n\n`;

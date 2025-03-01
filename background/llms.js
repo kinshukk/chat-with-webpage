@@ -51,10 +51,19 @@ export function formatPrompt(message, context) {
 }
 
 /**
- * Sends a prompt to the OpenRouter API and returns the response
+ * Sends messages to the OpenRouter API and returns the response
  */
-export async function callOpenRouter(prompt, apiKey, model = 'openai/gpt-3.5-turbo') {
-  console.log('Sending prompt to OpenRouter:', prompt);
+export async function callOpenRouter(messages, apiKey, model = 'openai/gpt-3.5-turbo') {
+  console.log('Sending messages to OpenRouter:', messages);
+
+  // Prepend system message
+  const fullMessages = [
+    {
+      role: 'system',
+      content: 'You are a helpful AI assistant analyzing web content.'
+    },
+    ...messages
+  ];
 
   const response = await fetch(OPENROUTER_API_URL, {
     method: 'POST',
@@ -66,16 +75,7 @@ export async function callOpenRouter(prompt, apiKey, model = 'openai/gpt-3.5-tur
     },
     body: JSON.stringify({
       model: model,  
-      messages: [
-        {
-          role: 'system',
-          content: 'You are a helpful AI assistant analyzing web content.'
-        },
-        {
-          role: 'user',
-          content: prompt
-        }
-      ]
+      messages: fullMessages
     })
   });
 

@@ -72,8 +72,16 @@ async function handleMessage({ message, settings, context }, sendResponse) {
     // Format the prompt using the message and context
     const formattedPrompt = formatPrompt(message, context);
     
-    // Call the OpenRouter API
-    let processedResponse = await callOpenRouter(formattedPrompt, settings.openrouterKey);
+    // Create messages array with a single user message for now
+    const messages = [
+      {
+        role: 'user',
+        content: formattedPrompt
+      }
+    ];
+    
+    // Call the OpenRouter API with the messages array
+    let processedResponse = await callOpenRouter(messages, settings.openrouterKey);
     
     // Only process if features are enabled AND implemented
     if (settings.features.summarization) {

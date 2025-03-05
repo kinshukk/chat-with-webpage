@@ -1,14 +1,6 @@
 # Chat with Webpage
 
-A Chrome extension that enables contextual conversations with web pages using LLMs via OpenRouter.
-
-## Recent Updates
-
-- ✅ Fixed popup window display when using context menu
-- ✅ Improved context extraction and display
-- ✅ Enhanced highlighting of selected text
-- ✅ Better error handling
-- ✅ Optimized message flow between components
+Chat with any section of any webpage (images, text). Like taking persistent notes on webpages
 
 ## Features
 
@@ -50,30 +42,6 @@ A Chrome extension that enables contextual conversations with web pages using LL
 
 > **Note**: The extension automatically extracts not just the selected text but also surrounding context and page content to provide more accurate responses.
 
-## Development
-
-The extension is built with a modular architecture:
-
-- `popup/`: Extension UI and settings
-- `background/`: Service worker and API communication
-- `content-scripts/`: DOM parsing and context extraction
-- `modules/`: Optional feature implementations
-
-To develop:
-```bash
-npm run watch
-```
-
-## Architecture
-
-- Uses Manifest V3 for Chrome extensions
-- Modular design for easy feature additions
-- Context-aware DOM parsing with hierarchical extraction
-- Storage-based message passing for reliable context transfer
-- Secure API key management
-- Threaded conversation storage
-- Rich context display with highlighted selection
-
 ## Future Enhancements
 
 - [ ] Readability.js integration for better content extraction
@@ -82,7 +50,3 @@ npm run watch
 - [ ] Citation verification
 - [ ] Export formats (MD, HTML, JSON)
 - [ ] Custom prompt templates
-
-## License
-
-MIT

@@ -7,10 +7,8 @@ export class ModelComparer {
   constructor() {
     this.enabled = false;
     this.availableModels = [
-      'openai/gpt-3.5-turbo',
-      'openai/gpt-4',
-      'anthropic/claude-2',
-      'google/palm-2-chat-bison'
+      'google/gemini-pro-1.5',
+      'google/gemini-2.0-flash-001',
     ];
   }
 

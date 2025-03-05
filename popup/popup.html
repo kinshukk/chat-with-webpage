@@ -2,6 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <title>Chat with Webpage</title>
   <link rel="stylesheet" href="popup.css">
 </head>
@@ -27,12 +28,21 @@
       <button id="save-settings">Save Settings</button>
     </div>
 
+    <div class="selected-text-container" id="selected-text-container">
+      <!-- Selected text will be displayed here -->
+    </div>
+    
     <div class="chat-container">
-      <div id="conversation-tree"></div>
-      <div class="input-area">
-        <textarea id="user-input" placeholder="Ask about the selected text..."></textarea>
-        <button id="send-message">Send</button>
-      </div>
+      <div id="conversation-tree" class="messages-container"></div>
+    </div>
+    
+    <div class="input-area">
+      <textarea id="user-input" placeholder="Ask about the selected text..."></textarea>
+      <button id="send-message">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+          <path fill="currentColor" d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
+        </svg>
+      </button>
     </div>
   </div>
   <script src="popup.js"></script>

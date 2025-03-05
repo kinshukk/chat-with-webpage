@@ -53,7 +53,7 @@ export function formatPrompt(message, context) {
 /**
  * Sends messages to the OpenRouter API and returns the response
  */
-export async function callOpenRouter(messages, apiKey, model = 'openai/gpt-3.5-turbo') {
+export async function callOpenRouter(messages, apiKey, model = 'google/gemini-pro-1.5') {
   console.log('Sending messages to OpenRouter:', messages);
 
   // Prepend system message
